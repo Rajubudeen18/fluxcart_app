@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Shopping Cart - NexKart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #22c55e;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="bg-white shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-gray-800">NexKart</a>
+            <div class="flex items-center">
+                <a href="index.html" class="text-gray-800 hover:text-indigo-600 font-medium px-4 py-2 rounded-md">Home</a>
+                <a href="customerDashboard.html" class="text-gray-800 hover:text-indigo-600 font-medium px-4 py-2 rounded-md">Dashboard</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Your Shopping Cart</h1>
+
+        <div id="cart-view">
+            <!-- This container will be shown when the cart has items -->
+            <div id="cart-with-items" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div id="cart-items-container" class="lg:col-span-2 bg-white rounded-lg shadow-md p-6 space-y-4">
+                    <!-- Cart items will be injected here -->
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="lg:col-span-1">
+                    <div id="cart-summary" class="bg-white rounded-lg shadow-md p-6 sticky top-8">
+                        <h2 class="text-xl font-semibold mb-4 border-b pb-2">Cart Summary</h2>
+                        <div class="flex justify-between text-lg font-bold my-4">
+                            <span>Total:</span>
+                            <span id="cart-total-price">$0.00</span>
+                        </div>
+                        <button class="w-full mt-4 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                            Proceed to Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- This message will be shown when the cart is empty -->
+            <div id="empty-cart-message" class="text-center py-16 bg-white rounded-lg shadow-md">
+                <p class="text-xl text-gray-500">Your cart is empty.</p>
+                <a href="index.html" class="mt-6 inline-block bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartItemsContainer = document.getElementById('cart-items-container');
+            const cartTotalPriceElement = document.getElementById('cart-total-price');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const cartWithItems = document.getElementById('cart-with-items');
+
+            // --- Helper Functions ---
+            const getCart = () => JSON.parse(localStorage.getItem('cart')) || [];
+            const saveCart = (cart) => {
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+            };
+
+            // --- Main Render Function ---
+            function renderCart() {
+                const cart = getCart();
+
+                if (cart.length === 0) {
+                    emptyCartMessage.classList.remove('hidden');
+                    cartWithItems.classList.add('hidden');
+                    return;
+                }
+
+                emptyCartMessage.classList.add('hidden');
+                cartWithItems.classList.remove('hidden');
+                cartItemsContainer.innerHTML = '';
+                let totalPrice = 0;
+
+                cart.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between items-center border-b pb-4';
+                    itemElement.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 bg-gray-200 rounded-md flex-shrink-0">
+                                <!-- Placeholder for image -->
+                            </div>
+                            <div>
+                                <p class="font-semibold text-lg">${item.name}</p>
+                                <p class="text-gray-600 text-sm">$${parseFloat(item.price).toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center border rounded-md">
+                                <button data-id="${item.id}" class="quantity-decrease font-bold px-3 py-1 hover:bg-gray-200">-</button>
+                                <span class="px-4 py-1">${item.quantity}</span>
+                                <button data-id="${item.id}" class="quantity-increase font-bold px-3 py-1 hover:bg-gray-200">+</button>
+                            </div>
+                            <p class="font-semibold w-20 text-right">$${(item.price * item.quantity).toFixed(2)}</p>
+                            <button data-id="${item.id}" class="remove-item text-red-500 hover:text-red-700 ml-4 font-semibold">Remove</button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                    totalPrice += item.price * item.quantity;
+                });
+
+                cartTotalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
+            }
+
+            // --- Event Listener for Cart Actions ---
+            cartItemsContainer.addEventListener('click', e => {
+                const cart = getCart();
+                const id = e.target.dataset.id;
+                if (!id) return;
+
+                const itemIndex = cart.findIndex(i => i.id === id);
+                if (itemIndex === -1) return;
+
+                if (e.target.classList.contains('quantity-increase')) {
+                    cart[itemIndex].quantity++;
+                } else if (e.target.classList.contains('quantity-decrease')) {
+                    cart[itemIndex].quantity--;
+                    if (cart[itemIndex].quantity <= 0) {
+                        cart.splice(itemIndex, 1); // Remove if quantity is 0
+                    }
+                } else if (e.target.classList.contains('remove-item')) {
+                    cart.splice(itemIndex, 1);
+                }
+
+                saveCart(cart);
+            });
+
+            // --- Initial Render ---
+            renderCart();
+        });
+    </script>
+</body>
+</html>

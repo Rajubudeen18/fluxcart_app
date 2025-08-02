@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f4f8; /* Consistent background color */
+            margin: 0; /* Remove default margin */
+            font-family: Arial, sans-serif; /* Consistent font */
+        }
+
+        .sidebar {
+            height: 100vh; /* Full height */
+            background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
+            padding: 20px;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s;
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
+        }
+
+        .sidebar h2 {
+            color: #ffffff;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #0056b3;
+        }
+
+        main {
+            margin-left: 270px; /* Adjusted for sidebar */
+            padding: 20px;
+        }
+
+        header {
+            background-color: #007bff; /* Match sidebar color */
+            color: white;
+            padding: 10px 20px;
+            position: fixed;
+            width: calc(100% - 250px); /* Full width minus sidebar */
+            top: 0;
+            left: 250px; /* Align with sidebar */
+            z-index: 10; /* Ensure it stays on top */
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>NexKart Admin</h2>
+        <a href="adminDashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="adminProducts.html"><i class="fas fa-box"></i> Products</a>
+        <a href="adminCustomers.html"><i class="fas fa-users"></i> Customers</a>
+        <a href="adminOrders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a href="#" class="disabled"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+
+    <header>
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Admin Portal</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="adminDashboard.html" class="hover:text-gray-400">Dashboard</a></li>
+                    <li><a href="adminProducts.html" class="hover:text-gray-400">Products</a></li>
+                    <li><a href="adminCustomers.html" class="hover:text-gray-400">Customers</a></li>
+                    <li><a href="adminOrders.html" class="hover:text-gray-400">Orders</a></li>
+                    <li><a href="#" id="admin-logout-btn" class="hover:text-gray-400">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h2 class="font-semibold mb-6">Order Management</h2>
+
+        <!-- Filters Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex flex-wrap gap-4 items-end">
+            <div class="flex-grow">
+                <label for="status-filter" class="block text-gray-700">Status</label>
+                <select id="status-filter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="flex-grow">
+                <label for="customer-search" class="block text-gray-700">Customer (Name/Email)</label>
+                <input type="text" id="customer-search" placeholder="Search by name or email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            </div>
+            <div class="flex-grow">
+                <label for="date-from" class="block text-gray-700">Date From</label>
+                <input type="date" id="date-from" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            </div>
+            <div class="flex-grow">
+                <label for="date-to" class="block text-gray-700">Date To</label>
+                <input type="date" id="date-to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            </div>
+            <button id="filter-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Apply Filters</button>
+            <button id="create-order-btn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300">Create Test Order</button>
+        </div>
+
+        <!-- Orders Table -->
+        <div id="orders-table-container" class="overflow-x-auto bg-white rounded-lg shadow-md">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Orders will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div id="pagination-controls" class="flex justify-center mt-6 space-x-2">
+            <!-- Pagination buttons will be dynamically inserted here -->
+        </div>
+
+        <!-- Order Details Modal -->
+        <div id="order-details-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-2xl w-full mx-auto p-6 relative">
+                    <h3 class="text-xl font-bold mb-4">Order Details</h3>
+                    <div id="modal-content">
+                        <!-- Order details will be dynamically inserted here -->
+                    </div>
+                    <div class="mt-4 flex justify-end gap-2">
+                        <button id="close-modal-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Close</button>
+                        <button id="save-order-btn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="js/authCheck.js"></script>
+    <script src="js/adminOrders.js"></script>
+</body>
+</html>

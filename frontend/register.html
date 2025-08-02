@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexKart - Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    :root {
+      --primary-dark: #1e3a8a;
+      --primary: #2563eb;
+      --primary-light: #93c5fd;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    }
+    .form-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="flex flex-col md:flex-row w-full max-w-6xl rounded-xl overflow-hidden">
+    <!-- Brand Section -->
+    <div class="gradient-bg text-white p-12 hidden md:flex flex-col justify-between md:w-1/2">
+      <div class="flex items-center space-x-2">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/36e2a771-63bd-49e7-a49e-5669be6ae9cf.png" alt="NexKart logo - blue gradient shopping cart icon with modern typography" class="h-10 w-10" />
+        <h1 class="text-2xl font-bold">NexKart</h1>
+      </div>
+      <div class="mt-16">
+        <h2 class="text-3xl font-bold mb-4">Join NexKart Today</h2>
+        <p class="text-primary-light">
+          Sign up to get access to thousands of products, exclusive deals, and fast delivery.
+        </p>
+      </div>
+      <div class="mt-auto">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5741d111-ca37-49a5-adaa-3665cc0d43fc.png" alt="Illustration showing a happy customer receiving e-commerce packages with shopping bags and delivery truck" class="w-full" />
+      </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="bg-white p-8 sm:p-12 w-full md:w-1/2 form-shadow">
+      <div class="mb-10 text-center md:text-left">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1120e4db-d491-4ba1-b827-8f682e82b009.png" alt="NexKart logo - blue gradient shopping cart icon" class="h-10 w-10 mx-auto md:mx-0" />
+        <h2 class="text-2xl font-bold text-gray-800 mt-4">Create an account</h2>
+        <p class="text-gray-500">Start your shopping journey with us</p>
+      </div>
+
+      <form id="registerForm" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+            <input type="text" name="firstName" id="firstName" placeholder="John" required
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          </div>
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+            <input type="text" name="lastName" id="lastName" placeholder="Doe" required
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input type="email" name="email" id="email" placeholder="john@example.com" required
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input type="password" name="password" id="password" placeholder="••••••••" required
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+        </div>
+
+        <div>
+          <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
+          <select name="role" id="role"
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+            <option value="customer">Customer</option>
+          </select>
+        </div>
+
+        <div class="flex items-center">
+          <input id="terms" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" required>
+          <label for="terms" class="ml-2 block text-sm text-gray-700">
+            I agree to the <a href="#" class="text-blue-600 hover:text-blue-800">Terms and Conditions</a>
+          </label>
+        </div>
+
+        <button type="submit" class="w-full gradient-bg text-white py-3 px-4 rounded-lg hover:opacity-90 transition font-medium">
+          Create Account
+        </button>
+
+        <div class="text-center text-sm text-gray-500">
+          Already have an account? <a href="customer-login.html" class="text-primary hover:text-primary-dark font-medium">Sign in</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="./js/register.js"></script>
+</body>
+</html>
+

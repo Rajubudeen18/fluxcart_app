@@ -1,0 +1,58 @@
+Code Audit and Validation Plan for appfortest Project
+
+1. Information Gathered:
+- Backend:
+  - Authentication implemented with JWT, bcrypt password hashing.
+  - Admin login and customer registration routes present.
+  - Customer and product CRUD implemented in controllers.
+  - Admin routes minimal, only one route to get users.
+  - Customer and product routes lack authentication middleware.
+  - JWT secret hardcoded in authController.js, but env variable used in middleware.
+  - Routes mounted in backend/index.js; backend/server.js is incomplete.
+- Frontend:
+  - Admin and customer portals implemented with HTML, Bootstrap, JS.
+  - Admin dashboard fetches users, products, customers, orders (some endpoints missing in backend).
+  - Customer dashboard supports viewing, deleting, resetting password.
+  - Token-based auth used on frontend with localStorage.
+  - Some UI buttons lack event handlers (e.g., block user).
+  - API endpoints in frontend do not always match backend routes.
+
+2. Issues Identified:
+- Major security flaw: No authentication or authorization middleware applied on protected routes.
+- JWT secret inconsistency: hardcoded string vs environment variable.
+- Admin routes incomplete and unprotected.
+- Frontend API endpoints mismatch backend routes causing potential 404 errors.
+- Missing event handlers for some UI actions.
+- Lack of error handling and validation in some backend controllers.
+- No rate limiting or brute force protection on auth routes.
+- Password reset returns temp password in response without secure delivery.
+- No logging or monitoring in backend.
+
+3. Proposed Fixes:
+- Apply verifyToken middleware on all protected routes.
+- Apply isAdmin middleware on admin routes.
+- Use environment variable consistently for JWT secret.
+- Complete admin routes with necessary CRUD and management endpoints.
+- Align frontend API endpoints with backend routes.
+- Implement missing UI event handlers.
+- Add input validation and error handling in backend.
+- Improve password reset flow to securely deliver temp password.
+- Add logging middleware for requests and errors.
+- Consider adding rate limiting on auth routes.
+
+4. Dependent Files to Edit:
+- backend/routes/adminRoutes.js, customerRoutes.js, productRoutes.js
+- backend/controllers/authController.js, customerController.js, productController.js
+- backend/middleware/authMiddleware.js
+- backend/index.js
+- frontend/js/adminDashboard.js, customer.js, adminLogin.js
+- Possibly environment configuration files (.env)
+
+5. Follow-up Steps:
+- Implement fixes incrementally with testing.
+- Verify all routes are protected and functional.
+- Test frontend flows for admin and customer portals.
+- Conduct security testing for auth and impersonation.
+- Provide final summary report.
+
+Please confirm if you approve this plan to proceed with the fixes and improvements.
